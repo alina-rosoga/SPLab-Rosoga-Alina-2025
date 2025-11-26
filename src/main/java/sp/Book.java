@@ -14,6 +14,11 @@ public class Book extends Section {
         authors.add(a);
     }
 
+    public void addContent(Element e) {
+        // delegate to Section.add to keep uniform API used in examples
+        add(e);
+    }
+
     @Override
     public void print() {
         System.out.println("Book: " + getTitle());
