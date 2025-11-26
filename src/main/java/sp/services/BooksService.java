@@ -1,7 +1,8 @@
 package sp.services;
 
 import org.springframework.stereotype.Service;
-import sp.persistence.BooksRepository;
+import sp.observer.AllBooksSubject;
+import sp.persistence.CrudRepository;
 import sp.rest.model.BookDto;
 
 import java.util.List;
@@ -9,10 +10,12 @@ import java.util.Optional;
 
 @Service
 public class BooksService {
-    private final BooksRepository repository;
+    private final CrudRepository<BookDto, Long> repository;
+    private final AllBooksSubject allBooksSubject;
 
-    public BooksService(BooksRepository repository) {
+    public BooksService(CrudRepository<BookDto, Long> repository, AllBooksSubject allBooksSubject) {
         this.repository = repository;
+        this.allBooksSubject = allBooksSubject;
     }
 
     public List<BookDto> getAll() {
@@ -26,7 +29,14 @@ public class BooksService {
     public BookDto create(BookDto dto) {
         // ensure id is null so JPA will generate it
         dto.setId(null);
-        return repository.save(dto);
+        BookDto saved = repository.save(dto);
+        // notify SSE observers about the new book
+        try {
+            allBooksSubject.add(saved);
+        } catch (Exception ex) {
+            // ignore notification failures
+        }
+        return saved;
     }
 
     public Optional<BookDto> update(Long id, BookDto dto) {
