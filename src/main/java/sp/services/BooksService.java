@@ -1,39 +1,43 @@
 package sp.services;
 
-import sp.rest.model.BookDto;
 import org.springframework.stereotype.Service;
+import sp.persistence.BooksRepository;
+import sp.rest.model.BookDto;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BooksService {
-    private final Map<Long, BookDto> store = new LinkedHashMap<>();
-    private final AtomicLong idCounter = new AtomicLong(1);
+    private final BooksRepository repository;
+
+    public BooksService(BooksRepository repository) {
+        this.repository = repository;
+    }
 
     public List<BookDto> getAll() {
-        return new ArrayList<>(store.values());
+        return repository.findAll();
     }
 
     public Optional<BookDto> getById(Long id) {
-        return Optional.ofNullable(store.get(id));
+        return repository.findById(id);
     }
 
     public BookDto create(BookDto dto) {
-        Long id = idCounter.getAndIncrement();
-        BookDto copy = new BookDto(id, dto.getTitle(), dto.getAuthor());
-        store.put(id, copy);
-        return copy;
+        // ensure id is null so JPA will generate it
+        dto.setId(null);
+        return repository.save(dto);
     }
 
     public Optional<BookDto> update(Long id, BookDto dto) {
-        if (!store.containsKey(id)) return Optional.empty();
-        BookDto updated = new BookDto(id, dto.getTitle(), dto.getAuthor());
-        store.put(id, updated);
-        return Optional.of(updated);
+        if (!repository.existsById(id)) return Optional.empty();
+        dto.setId(id);
+        return Optional.of(repository.save(dto));
     }
 
     public boolean delete(Long id) {
-        return store.remove(id) != null;
+        if (!repository.existsById(id)) return false;
+        repository.deleteById(id);
+        return true;
     }
 }
