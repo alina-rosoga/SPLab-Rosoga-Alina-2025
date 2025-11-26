@@ -1,0 +1,10 @@
+﻿# Project exclude paths
+/out/
+/.idea/
+*.iml
+
+# Ignore local JDK distribution and build outputs
+/oracleJdk-25/
+/target/
+/bin/
+/build/
