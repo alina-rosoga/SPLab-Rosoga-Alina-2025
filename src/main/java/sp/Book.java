@@ -34,6 +34,7 @@ public class Book extends Section {
                 e.print();
             } catch (IndexOutOfBoundsException ex) {
                 break;
+    
             }
         }
     }

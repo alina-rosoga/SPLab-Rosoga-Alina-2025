@@ -1,0 +1,12 @@
+Proiect individual: API REST pentru gestionare produse in magazin
+Tehnologii: Spring Boot 3.2.0, H2 Database, JPA
+Functionalitate: adaugare, stergere, modificare, vizualizare produse
+Endpoint-uri:
+  GET /products - obtine toate produsele
+  GET /products/{id} - obtine produs dupa ID
+  POST /products - creeaza produs nou
+  PUT /products/{id} - modifica produs existent
+  DELETE /products/{id} - sterge produs
+Persistenta: H2 (baza de date in-file la ~/h2db/shopdb)
+Model: Product (id, name, description, price, quantity)
+Port: 8080
