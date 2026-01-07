@@ -1,12 +1,36 @@
 Proiect individual: API REST pentru gestionare produse in magazin
-Tehnologii: Spring Boot 3.2.0, H2 Database, JPA
-Functionalitate: adaugare, stergere, modificare, vizualizare produse
-Endpoint-uri:
+Tehnologii: Spring Boot 3.2.0, H2 Database, JPA, Jakarta Validation
+Functionalitate principala: adaugare, stergere, modificare, vizualizare produse si categorii
+
+ENTITATI:
+- Product: id, name, description, price, quantity, category
+- Category: id, name, description
+
+ENDPOINT-URI PRODUSE (/products):
   GET /products - obtine toate produsele
   GET /products/{id} - obtine produs dupa ID
-  POST /products - creeaza produs nou
+  POST /products - creeaza produs nou (cu validare)
   PUT /products/{id} - modifica produs existent
   DELETE /products/{id} - sterge produs
-Persistenta: H2 (baza de date in-file la ~/h2db/shopdb)
-Model: Product (id, name, description, price, quantity)
-Port: 8080
+  GET /products/search/by-name?name=... - cauta produse dupa nume
+  GET /products/category/{categoryId} - obtine produse din categorie
+  GET /products/search/by-price?minPrice=...&maxPrice=... - cauta in interval de pret
+  GET /products/stock/low?threshold=... - obtine produse cu stoc mic
+
+ENDPOINT-URI CATEGORII (/categories):
+  GET /categories - obtine toate categoriile
+  GET /categories/{id} - obtine categorie dupa ID
+  POST /categories - creeaza categorie noua
+  PUT /categories/{id} - modifica categorie
+  DELETE /categories/{id} - sterge categorie
+
+CARACTERISTICI AVANSATE:
+- Validari cu @Valid si Jakarta.validation
+- Exception handling cu GlobalExceptionHandler
+- DTOs pentru encapsulare date
+- Cautare flexibila (nume, pret, stoc)
+- Relatie 1:N intre Category si Product
+
+PERSISTENTA: H2 (baza de date in-file la ~/h2db/shopdb)
+PORT: 8080
+H2 CONSOLE: http://localhost:8080/h2-console
